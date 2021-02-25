@@ -24,14 +24,9 @@ contract VendingMachine is Pausable, ERC1155Holder, ERC721Holder {
 
     bytes4 private constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
     bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
-
-    struct NFTJar {
-        mapping (address => mapping (uint256 => uint256)) nftsAmounts;
-    }
     
-    mapping (uint256 => Sale) sales;
-    mapping (address => NFTJar) nftJars;
-    uint256 newTokenId;
+    mapping (uint256 => Sale) public sales;
+    uint256 newSalesId;
 
     event ERC1155Sale(
         address creator, 
@@ -83,8 +78,8 @@ contract VendingMachine is Pausable, ERC1155Holder, ERC721Holder {
     function _newNFTSale(Sale memory newSale) 
         internal 
     {        
-        sales[newTokenId] = newSale;
-        newTokenId++;
+        sales[newSalesId] = newSale;
+        newSalesId++;
     }
 
     function changePricePerUnit(uint256 saleId, uint256 pricePerUnit) external onlySaleCreator(saleId) {
@@ -108,11 +103,11 @@ contract VendingMachine is Pausable, ERC1155Holder, ERC721Holder {
 
     function buyNFT(uint256 saleId, uint256 amount) external payable {
         Sale storage sale = sales[saleId];
-        require(sale.amount <= amount);
-        IERC20 tokenRequested = IERC20(sale.tokenWant);
+        require(sale.amount >= amount, 'Sale amount exceed');
+        IERC20 tokenWant = IERC20(sale.tokenWant);
         uint256 tokenTotalAmount = amount.mul(sale.pricePerUnit);
-        require (tokenTotalAmount <= tokenRequested.balanceOf(msg.sender));
-        tokenRequested.safeTransfer(sale.creator, tokenTotalAmount);
+        require (tokenTotalAmount <= tokenWant.balanceOf(msg.sender), 'Balance of token want too low');
+        tokenWant.safeTransferFrom(msg.sender, sale.creator, tokenTotalAmount);
         if (sale.nftInterface == _INTERFACE_ID_ERC721) {
             IERC721 nft = IERC721(sale.nftAddress);
             nft.safeTransferFrom(address(this), msg.sender, sale.tokenId);

@@ -9,16 +9,16 @@ use(solidity)
 describe('Deploy and test DV-Artist NFT', () => {
 
     const provider = waffle.provider
-    const [, deployer, coordinator] = provider.getWallets()
+    const [deployer, alice, bob] = provider.getWallets()
 
-    let dvArtist: Contract;
+    let dvArtist: Contract
 
     beforeEach(async() => {
-        const DVArtist = await ethers.getContractFactory('DVArtist')
-        dvArtist = await DVArtist.deploy("dv.artist", "DVArt", "ipfs:/")
+        const DVArtist = await ethers.getContractFactory('DVArtist', deployer)
+        dvArtist = await DVArtist.deploy('dv.artist', 'DVArt', 'ipfs:/')
         await dvArtist.deployed()
         const receipt = await dvArtist.deployTransaction.wait()
-        let gasUsage = null;
+        let gasUsage = null
         if (receipt.status === 1) {
             gasUsage = (receipt.gasUsed as BigNumber).toNumber()
         }
@@ -26,16 +26,13 @@ describe('Deploy and test DV-Artist NFT', () => {
     })
 
     it('Check DV-Artist NFT parameter', async () => {
-        expect(await dvArtist.name()).to.equal("dv.artist")
-        expect(await dvArtist.symbol()).to.equal("DVArt")
+        expect(await dvArtist.name()).to.equal('dv.artist')
+        expect(await dvArtist.symbol()).to.equal('DVArt')
     })
 
-    /*it('allow only owner to mint a new NFT', async()=> {
-
+    it('allow only owner to mint a new NFT', async()=> {
+        const nft = await dvArtist.mint(0, 50, 'ipfs.uri')
+        expect(await dvArtist.balanceOf(deployer.address, 0)).to.equal(50)
+        await expect(dvArtist.connect(alice).mint(1, 100, 'ipfs.uri')).to.be.revertedWith('Ownable: caller is not the owner')
     })
-
-    it('allow whitelist to sell NFT via vending machine', async() => {
-
-    })*/
-
 })
