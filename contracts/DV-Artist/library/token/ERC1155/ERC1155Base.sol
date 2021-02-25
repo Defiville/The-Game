@@ -2,7 +2,6 @@
 pragma solidity ^0.7.6;
 
 import "../../access/Ownable.sol";
-import "./ERC1155Metadata_URI.sol";
 import "./ERC1155.sol";
 import "../../utils/StringLibrary.sol";
 
@@ -11,16 +10,12 @@ contract ERC1155Base is Ownable, ERC1155 {
     using StringLibrary for string;
 
     //Token URI prefix
-    string public tokenURIPrefix;
+    string public tokenURIPrefix = 'ipfs:/';
     // Optional mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
 
     // id => creator
     mapping (uint256 => address) public creators;
-
-    constructor(string memory _tokenURIPrefix) {
-        tokenURIPrefix = _tokenURIPrefix;
-    }
 
     // Creates a new token type and assings _initialSupply to minter
     function _mint(uint256 _id, uint256 _supply, string memory _uri) internal {
@@ -55,9 +50,8 @@ contract ERC1155Base is Ownable, ERC1155 {
      * @param tokenId uint256 ID of the token to set its URI
      * @param uri string URI to assign
      */
-    function _setTokenURI(uint256 tokenId, string memory _uri) public onlyOwner {
+    function _setTokenURI(uint256 tokenId, string memory _uri) internal {
         require(creators[tokenId] != address(0x0), "_setTokenURI: Token should exist");
-        //super._setTokenURI(tokenId, uri);
         _tokenURIs[tokenId] = _uri;
     }
 

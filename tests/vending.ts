@@ -26,7 +26,7 @@ describe('Deploy and test VendingMachine', () => {
         expect(gasUsage).lessThan(2000000)
 
         const DVArtist = await ethers.getContractFactory('DVArtist', deployer)
-        dvArtist = await DVArtist.deploy('dv.artist', 'DVArt', 'ipfs:/')
+        dvArtist = await DVArtist.deploy()
         await dvArtist.deployed()
     })
 
