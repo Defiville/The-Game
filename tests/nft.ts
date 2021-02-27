@@ -35,6 +35,12 @@ describe('Deploy and test DV-Artist NFT', () => {
         const nft = await dvArtist.mint(0, 50, 'ipfs.uri')
         expect(await dvArtist.balanceOf(deployer.address, 0)).to.equal(50)
         await expect(dvArtist.connect(alice).mint(1, 100, 'ipfs.uri')).to.be.revertedWith('Ownable: caller is not the owner')
+        const tokenURIPrefix = await dvArtist.tokenURIPrefix()
+        expect(await dvArtist.uri(0)).to.equal(tokenURIPrefix + 'ipfs.uri')
+        const data = new Uint8Array(0)
+        await dvArtist.safeTransferFrom(deployer.address, alice.address, 0, 10, data)
+        expect(await dvArtist.balanceOf(deployer.address, 0)).to.equal(40)
+        expect(await dvArtist.balanceOf(alice.address, 0)).to.equal(10)
     })
 
     it('Transfer ownership', async() => {

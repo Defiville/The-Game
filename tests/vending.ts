@@ -38,12 +38,8 @@ describe('Deploy and test VendingMachine', () => {
         await dvArtist.mint(tokenId, amount, 'ipfs.uri')
         expect(await dvArtist.balanceOf(deployer.address, tokenId)).to.equal(amount)
         await dvArtist.setApprovalForAll(vendingMachine.address, true)
-        await vendingMachine.erc1155Sale(dvArtist.address, tokenId, amount, tokenWant, pricePerUnit)
+        await vendingMachine.createNFTSaleForERC20(dvArtist.address, [tokenId], [amount], tokenWant, [pricePerUnit])
         expect(await dvArtist.balanceOf(vendingMachine.address, tokenId)).to.equal(amount)
         //await vendingMachine.buyNFT(0, 1)
     })
-
-    /*it('sell ERC1155 to vending', async()=> {
-
-    })*/
 })
