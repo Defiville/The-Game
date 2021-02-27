@@ -1,3 +1,6 @@
+![1_vXuEUwwdULkheQ_m_6-J2Q](https://user-images.githubusercontent.com/2848253/109382859-3d857d80-78e3-11eb-8f2b-de3abad75d13.png)
+
+
 # The-Game
 Main Repo for Defiville Game
 
@@ -10,13 +13,12 @@ Main Repo for Defiville Game
 ### Run tests
 `yarn test`
 
-
-## Defiville Island Token (ISLA)
+## :house_with_garden: Defiville Island Token (ISLA)
 
 The ISLA token has 7M of max supply. It has been deployed, and verified at etherscan on 2021-01-31
   - [0x20a68f9e34076b2dc15ce726d7eebb83b694702d](https://etherscan.io/token/0x20a68f9e34076b2dc15ce726d7eebb83b694702d)
 
-## Season 1 (Start period 2021-02-01 18:00 UTC - End period 2021-03-03 18:00 UTC)
+## :ocean: Season 1 (Start period 2021-02-01 18:00 UTC - End period 2021-03-03 18:00 UTC)
 
 4 LM pools (CRV, SNX, SUSHI, AAVE) have started on 2021-02-01 at 18:00 UTC with 100K ISLA as farming reward for each pool (400K ISLA in total).
 Contracts verified at etherscan:
@@ -28,4 +30,4 @@ Contracts verified at etherscan:
 Another LM pool (LINK), voted by the community, has started on 2021-02-13 at 18:00 UTC with 100K ISLA as farming reward. The daily reward for this poll is greater.
   - ISLALINKLM [0xce4d7780d760e5d6f3f2b436756d2507478fedb9](https://etherscan.io/address/0xce4d7780d760e5d6f3f2b436756d2507478fedb9#code)
 
-## Season 2
+## :goat: Season 2
