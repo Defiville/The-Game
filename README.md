@@ -16,7 +16,7 @@ Main Repo for Defiville Game
 ## :house_with_garden: Defiville Island Token (ISLA)
 
 The ISLA token has 7M of max supply. It has been deployed, and verified at etherscan on 2021-01-31
-  - [0x20a68f9e34076b2dc15ce726d7eebb83b694702d](https://etherscan.io/token/0x20a68f9e34076b2dc15ce726d7eebb83b694702d)
+  - ISLA [0x20a68f9e34076b2dc15ce726d7eebb83b694702d](https://etherscan.io/token/0x20a68f9e34076b2dc15ce726d7eebb83b694702d)
 
 ## :ocean: Season 1 (Start period 2021-02-01 18:00 UTC - End period 2021-03-03 18:00 UTC)
 
@@ -29,5 +29,11 @@ Contracts verified at etherscan:
  
 Another LM pool (LINK), voted by the community, has started on 2021-02-13 at 18:00 UTC with 100K ISLA as farming reward. The daily reward for this poll is greater.
   - ISLALINKLM [0xce4d7780d760e5d6f3f2b436756d2507478fedb9](https://etherscan.io/address/0xce4d7780d760e5d6f3f2b436756d2507478fedb9#code)
+
+## :art: Defiville Artist Collection (DVART)
+
+It is the first NFT created into Defiville world, reserved for emergent artists. The community can propose new artists giving to them an opportunity to publish personal artwork or even creating new ones following the Defiville world style.
+
+- DVART [0x97bb88B60F2ae621EC64Efbf841687531b6B8c52](https://etherscan.io/address/0x97bb88B60F2ae621EC64Efbf841687531b6B8c52#code)
 
 ## :goat: Season 2
