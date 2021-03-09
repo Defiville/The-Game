@@ -48,13 +48,7 @@ describe('Deploy and test VendingMachine', () => {
         const amountToBuy = 2
         await vendingMachine.createNFTSaleForETH(dvArtist.address, tokenId, amountToMint, pricePerUnit)
         expect(await dvArtist.balanceOf(vendingMachine.address, tokenId)).to.equal(amountToMint)
-        const aliceHexBalancebefore = await provider.getBalance(alice.address)
-        console.log(aliceHexBalancebefore)
         await vendingMachine.connect(alice).buyNFT(0, amountToBuy, {value: pricePerUnit.mul(amountToBuy)})
-        const aliceHexBalance = await provider.getBalance(alice.address)
-        console.log(aliceHexBalance)
-        const vendingEthBalance = await provider.getBalance(vendingMachine.address)
-        console.log(vendingEthBalance)
         expect(await dvArtist.balanceOf(vendingMachine.address, tokenId)).to.equal(amountToMint - amountToBuy)
         await vendingMachine.cancelSale(0)
         expect(await dvArtist.balanceOf(vendingMachine.address, tokenId)).to.equal(0)
