@@ -17,7 +17,9 @@ abstract contract IdleYield {
     function fee() external virtual view returns(uint256);
 }
 
-contract PLUGIDLEV1 is IPLUGV1, Ownable, Pausable {
+// changes from v1
+// TO DO
+contract PLUGIDLEV2 is IPLUGV1, Ownable, Pausable {
     
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
