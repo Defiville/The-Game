@@ -67,7 +67,7 @@ contract PLUGSTAKEV1 is IPLUGV1, Pausable {
     /**
      * Internal function to discharge plug
      */
-    function _dischargePlug(uint256 _plugPercentage) internal {
+    /*function _dischargePlug(uint256 _plugPercentage) internal {
         require(_plugPercentage == 0 || _plugPercentage == 50 || _plugPercentage == 100);
         uint256 userAmount = tokenWantAmounts[msg.sender];
         require(userAmount > 0);
@@ -111,7 +111,7 @@ contract PLUGSTAKEV1 is IPLUGV1, Pausable {
         amountToDischarge = userAmount.add(rewardForUser);
         _dischargeUser(amountToDischarge);
         emit PlugDischarged(msg.sender, userAmount, rewardForUser, rewardForPlug);
-    }
+    }*/
 
     function upgradePlug(uint256 _nextLevelCap) external override {
 
@@ -121,7 +121,7 @@ contract PLUGSTAKEV1 is IPLUGV1, Pausable {
 
     }
 
-    function _getPlugBalance(address _token) internal returns(uint256) {
+    function _getPlugBalance(address _token) internal view returns(uint256) {
         return IERC20(_token).balanceOf(address(this));
     }
 }
