@@ -21,18 +21,23 @@ contract RadioSubscription is Ownable {
     uint256 public radioJar;
     uint256 public percentageForArtists = 50;
     
-    event AddArtist(address artist);
+    event AddArtist(address[] artist);
+    event Earn(address recipient, address token, uint256 amount);
+    event RedeemArtistShare(address indexed artist, uint256 amount);
+    event SetArtistsPercentage(uint256 oldPercentage, uint256 newPercentage);
+    event SetMonthlyPrice(uint256 oldPrice, uint256 newPrice);
     event Subscribe(address indexed user, uint256 months);
     event TipRadio(address indexed user, address token, uint256 amount);
-    event TipArtist(address indexed user, address indexed artist, uint256 amount);
-    event RedeemArtistShare(address indexed artist, uint256 amount);
+    event TipArtist(
+        address indexed user, 
+        address indexed token, 
+        address indexed artist, 
+        uint256 amount
+    );
+    event TipArtists(address indexed user, uint256 amount);
     
-    constructor(address[] memory _artistsWL, address _tokenWant) {
-        tokenWantA = _tokenWant;
-        tokenWant = IERC20(tokenWantA);
-        for(uint256 i = 0; i < _artistsWL.length; i++) {
-            wlArtists[_artistsWL[i]] = true;
-        }
+    
+    constructor() {
     }
     
     function subscribe(uint256 _months) external {
@@ -40,14 +45,15 @@ contract RadioSubscription is Ownable {
         
         _receiveToken(tokenWantA, totalAmount);
         
-        artistsJar = totalAmount.div(100).mul(percentageForArtists);
-        radioJar = totalAmount.sub(artistsJar);
+        artistsJar = artistsJar.add(totalAmount.div(100).mul(percentageForArtists));
+        radioJar = radioJar.add(totalAmount.sub(artistsJar));
         require(radioJar.add(artistsJar) == totalAmount);
         
+        uint256 secondsToAdd = _months.mul(monthSeconds);
         if (subscribers[msg.sender] == 0) {
-            subscribers[msg.sender] = block.timestamp.add(_months.mul(monthSeconds));
+            subscribers[msg.sender] = block.timestamp.add(secondsToAdd);
         } else {
-            subscribers[msg.sender] = subscribers[msg.sender].add(_months.mul(monthSeconds));
+            subscribers[msg.sender] = subscribers[msg.sender].add(secondsToAdd);
         }
         emit Subscribe(msg.sender, _months);
     }
@@ -63,7 +69,13 @@ contract RadioSubscription is Ownable {
     function tipArtist(address _artist, address _token, uint256 _amount) external {
         require(wlArtists[_artist]);
         IERC20(_token).transferFrom(msg.sender, _artist, _amount);
-        emit TipArtist(msg.sender, _artist, _amount);
+        emit TipArtist(msg.sender, _token, _artist, _amount);
+    }
+
+    function tipArtists(uint256 _amount) external {
+        _receiveToken(tokenWantA, _amount);
+        artistsJar = artistsJar.add(_amount);
+        emit TipArtists(msg.sender, _amount);
     }
     
     function _receiveToken(address _token, uint256 _amount) internal {
@@ -74,10 +86,12 @@ contract RadioSubscription is Ownable {
         require(balanceAfter == balanceBefore.add(_amount));
     }
     
-    function addArtist(address _artist) external onlyOwner {
-        require(wlArtists[_artist] == false);
-        wlArtists[_artist] = true;
-        emit AddArtist(_artist);
+    function addArtists(address[] memory _artists) external onlyOwner {
+        for (uint256 i = 0; i < _artists.length; i++) {
+           require(wlArtists[_artists[i]] == false);
+            wlArtists[_artists[i]] = true; 
+        }
+        emit AddArtist(_artists);
     }
     
     function reserveForArtists(address[] memory _artists, uint256[] memory _amounts) external onlyOwner {
@@ -98,8 +112,9 @@ contract RadioSubscription is Ownable {
     function redeemArtistShare(uint256 _amount) external {
         require(wlArtists[msg.sender], 'Not in Whitelist');
         require(artistsShare[msg.sender] > _amount, 'Amount exceed shares');
-        tokenWant.transfer(msg.sender, _amount);
+        _sendToken(tokenWantA, msg.sender, _amount);
         artistsShare[msg.sender] = artistsShare[msg.sender].sub(_amount);
+        emit RedeemArtistShare(msg.sender, _amount);
     }
     
     function earn(address _token, address _recipient, uint256 _amount) external onlyOwner {
@@ -107,20 +122,27 @@ contract RadioSubscription is Ownable {
             require(_amount <= radioJar);
             radioJar = radioJar.sub(_amount);
         }
+        _sendToken(_token, _recipient, _amount);
+        emit Earn(_recipient, _token, _amount);
+    }
+
+    function _sendToken(address _token, address _recipient, uint256 _amount) internal {
         uint256 balanceBefore = IERC20(_token).balanceOf(address(this));
         IERC20(_token).transfer(_recipient, _amount);
         uint256 balanceAfter = IERC20(_token).balanceOf(address(this));
-        require(balanceBefore.sub(balanceAfter) == _amount);
+        require(balanceBefore.sub(balanceAfter) == _amount); 
     }
 
     function setArtistsPercentage(uint256 _newPercentage) external onlyOwner {
         require(_newPercentage <= 100);
+        emit SetArtistsPercentage(percentageForArtists, _newPercentage);
         percentageForArtists = _newPercentage;
     }
 
-    function setMonthlyCost(uint256 newPrice) external onlyOwner {
-        require(newPrice >= ONE_18); // at least 1 xDAI
-        monthlyPrice = newPrice;
+    function setMonthlyPrice(uint256 _newPrice) external onlyOwner {
+        require(_newPrice >= ONE_18); // at least 1 xDAI
+        emit SetMonthlyPrice(monthlyPrice, _newPrice);
+        monthlyPrice = _newPrice;
     }
     
     function isSubscribed(address _user) view external returns (bool) {
