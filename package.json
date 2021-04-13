@@ -5,7 +5,10 @@
   "scripts": {
     "build": "hardhat compile",
     "clean": "rm -rf cache && rm -rf build",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "localNode": "hardhat node",
+    "deployRTLocal": "hardhat run --network localhost scripts/deployRadioTips.ts",
+    "deployRTXdai": "hardhat run --network xdai scripts/deployRadioTips.ts"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",

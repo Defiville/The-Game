@@ -11,7 +11,7 @@ const config: HardhatUserConfig = {
       blockGasLimit: GAS_LIMIT,
     },
     localhost: {
-      url: "http://127.0.0.1:18545"
+      url: "http://127.0.0.1:8545"
     },
     ganache: {
       // Workaround for https://github.com/nomiclabs/hardhat/issues/518
@@ -22,6 +22,10 @@ const config: HardhatUserConfig = {
       url: process.env.ETHEREUM_JSONRPC_HTTP_URL || 'http://127.0.0.1:8545',
       accounts: { mnemonic: '' },
     },
+    xdai: {
+      url: 'https://rpc.xdaichain.com/',
+      accounts: { mnemonic: ''},
+    }
   },
   paths: {
     artifacts: "build/contracts",

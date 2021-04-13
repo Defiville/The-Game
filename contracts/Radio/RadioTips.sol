@@ -1,5 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.7.6;
+pragma abicoder v2;
 
 import "../Common/library/math/SafeMath.sol";
 import "../Common/library/token/ERC20/SafeERC20.sol";
@@ -11,7 +12,7 @@ contract RadioTips is Ownable {
     using SafeERC20 for IERC20;
 
     struct Artist {
-        bytes32 name;
+        string name;
         address recipient;
         mapping (address => uint256) tipJars;
     }
@@ -21,11 +22,11 @@ contract RadioTips is Ownable {
     mapping (uint256 => address) public artistRecipients;
     uint256 public nextArtistId;
     
-    event AddArtist(bytes32 name, address recipient);
+    event AddArtist(string name, address recipient, uint256 artistId);
     event RedeemRadioTips(address recipient, address[] tokens, uint256[] amounts);
     event RedeemArtistTips(uint256 indexed artistId, address[] tokens, uint256[] amounts);
     event SetArtistRecipient(uint256 artistId, address newRecipient);
-    event TipRadio(address indexed user, address token, uint256 amount);
+    event TipRadio(address indexed user, address indexed token, uint256 amount);
     event TipArtist(
         address indexed user, 
         address indexed token, 
@@ -34,14 +35,35 @@ contract RadioTips is Ownable {
     );
     
     /**
-     * @dev Function for tipping radio service
+     * @dev Function for tipping defiville radio service
      * @param _token token used for tipping the radio
      * @param _amount amount to tip
      */
     function tipRadio(address _token, uint256 _amount) external {
+        _tipRadio(_token, _amount);
+    }
+    
+    /**
+     * @dev Function for tipping defiville radio service with multiple tokens
+     * @param _tokens tokens used for tipping the radio
+     * @param _amounts amounts to tip
+     */
+    function tipsRadio(address[] memory _tokens, uint256[] memory _amounts) external {
+        require(_tokens.length == _amounts.length, 'Different length');
+        for (uint256 i = 0; i < _tokens.length; i++) {
+            _tipRadio(_tokens[i], _amounts[i]);
+        }
+    }
+
+    /**
+     * @dev Internal function for tipping the service
+     * @param _token token used for tipping the radio
+     * @param _amount amount to tip
+     */
+    function _tipRadio(address _token, uint256 _amount) internal {
         _receiveToken(_token, _amount);
         radioJars[_token] = radioJars[_token].add(_amount);
-        emit TipRadio(msg.sender, _token, _amount);
+        emit TipRadio(msg.sender, _token, _amount); 
     }
     
     /**
@@ -59,7 +81,7 @@ contract RadioTips is Ownable {
      * @param _artistIds erc1155 nft address related to tokenIds
      * @param _tokens nft ids to sell
      * @param _amounts nft ids amounts to sell
-     * @notice It could be used to tip the same artist but with more than one token
+     * @notice Also it could be used to tip the same artist but with more than one token
      */
     function tipArtists(
         uint256[] memory _artistIds,
@@ -79,7 +101,7 @@ contract RadioTips is Ownable {
      * @param _amount token amount
      */
     function _tipArtist(uint256 _artistId, address _token, uint256 _amount) internal {
-        require(_artistId < nextArtistId, 'Artist id not minted yet');
+        require(_artistId < nextArtistId, 'Artist id not created yet');
         Artist storage artist = artists[_artistId];
         //require(keccak256(abi.encodePacked(artist.name)) != keccak256(abi.encodePacked('')), 'No Name');
         _receiveToken(_token, _amount);
@@ -102,20 +124,20 @@ contract RadioTips is Ownable {
     
     /**
      * @dev Function to add a new artist
-     * @param _names artist names
+     * @param _names artists name
      */
-    function addArtists(bytes32[] memory _names) external onlyOwner {
+    function addArtists(string[] memory _names) external onlyOwner {
         for (uint256 i = 0; i < _names.length; i++) {
           _addArtist(_names[i], address(0));  
         }
     }
 
     /**
-     * @dev Function to add a new artist
-     * @param _names artist names
-     * @param _recipients artist recepients
+     * @dev Function to add a new artist with recipient
+     * @param _names artists name
+     * @param _recipients artists recepient
      */
-    function addArtistsWithRecipient(bytes32[] memory _names, address[] memory _recipients) external onlyOwner {
+    function addArtistsWithRecipient(string[] memory _names, address[] memory _recipients) external onlyOwner {
         for (uint256 i = 0; i < _names.length; i++) {
            _addArtist(_names[i], _recipients[i]); 
         }
@@ -126,22 +148,23 @@ contract RadioTips is Ownable {
      * @param _name artist name
      * @param _recipient artist recepient
      */
-    function _addArtist(bytes32 _name, address _recipient) internal {
+    function _addArtist(string memory _name, address _recipient) internal {
         Artist storage artist = artists[nextArtistId];
+        require(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked('')), 'Empty Name');
         artist.name = _name;
         if (_recipient != address(0)) {
            artist.recipient = _recipient;
            artistRecipients[nextArtistId] = _recipient;
         }
+        emit AddArtist(_name, _recipient, nextArtistId);
         nextArtistId = nextArtistId + 1;
-        emit AddArtist(_name, _recipient);
     }
     
     /**
-     * @dev Function to add a new artist
-     * @param _artistId artist name
-     * @param _tokens artist recepient
-     * @param _amounts artist recepient
+     * @dev Function to redeem artist tips
+     * @param _artistId artist id
+     * @param _tokens tokens to redeem
+     * @param _amounts amount for each token
      */
     function redeemArtistTips(
         uint256 _artistId,
@@ -160,30 +183,30 @@ contract RadioTips is Ownable {
     }
     
     /**
-     * @dev Function to add a new artist
-     * @param _tokens artist name
-     * @param _recipient artist recepient
-     * @param _amounts artist recepient
+     * @dev Function to redeem radio tips
+     * @param _tokens tokens to redeem
+     * @param _amounts amounts for each token
+     * @param _recipient recipient to send radio tips
      */
     function redeemRadioTips(
         address[] memory _tokens,
-        address _recipient,
-        uint256[] memory _amounts
+        uint256[] memory _amounts,
+        address _recipient
     ) external onlyOwner {
-        require(_tokens.length == _amounts.length, 'Differen length');
+        require(_tokens.length == _amounts.length, 'Different length');
         for (uint256 i = 0; i < _tokens.length; i++) {
+            require(radioJars[_tokens[i]] >= _amounts[i], 'Amount exceed tips');
            _sendToken(_tokens[i], _recipient, _amounts[i]);
-           require(radioJars[_tokens[i]] >= _amounts[i], 'Amount exceed tips');
            radioJars[_tokens[i]] = radioJars[_tokens[i]].sub(_amounts[i]);
         }
         emit RedeemRadioTips(_recipient, _tokens, _amounts);
     }
 
     /**
-     * @dev Internal function to send token to contract
-     * @param _token artist name
-     * @param _recipient artist recepient
-     * @param _amount artist recepient
+     * @dev Internal function to send token to outside
+     * @param _token token to send
+     * @param _recipient recipient to send token
+     * @param _amount amount to send
      */
     function _sendToken(address _token, address _recipient, uint256 _amount) internal {
         uint256 balanceBefore = IERC20(_token).balanceOf(address(this));
@@ -194,9 +217,9 @@ contract RadioTips is Ownable {
 
     /**
      * @dev Function to initialize artist recipient
-     * @param _artistId artist name
-     * @param _recipient artist recepient
-     * @notice It could be called at most once per artist
+     * @param _artistId artist id
+     * @param _recipient artist recipient
+     * @notice It could be called at most once per artist by the owner
      */
     function initializeArtistRecipient(uint256 _artistId, address _recipient) external onlyOwner {
         require(artistRecipients[_artistId] == address(0), 'Already initialized');
@@ -207,6 +230,7 @@ contract RadioTips is Ownable {
      * @dev Function to set a new artist recipient
      * @param _artistId artist id
      * @param _recipient artist address
+     * @notice It could be called only by the artist recipient address
      */
     function setArtistRecipient(uint256 _artistId, address _recipient) external {
         require(msg.sender == artistRecipients[_artistId], '!Recipient');
