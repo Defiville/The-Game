@@ -1,9 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.7.6;
 
-import "./SafeMath.sol";
-import "./SafeERC20.sol";
-import "./Ownable.sol";
+import "../Common/library/math/SafeMath.sol";
+import "../Common/library/token/ERC20/SafeERC20.sol";
+import "../Common/library/Ownable.sol";
 
 contract RadioSubscription is Ownable {
     

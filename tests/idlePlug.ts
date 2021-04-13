@@ -14,7 +14,6 @@ describe('Deploy and test IDLEPlug', () => {
 
     let plugIdle: Contract
     let tokenWant: Contract
-    let tokenStrategy: Contract
 
     beforeEach(async() => {
         const PlugIDLEV1 = await ethers.getContractFactory('PLUGIDLEV1', deployer)

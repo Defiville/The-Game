@@ -1,8 +1,8 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.7.6;
 
-import "./Address.sol";
-import "./SafeMath.sol";
+import "../../Address.sol";
+import "../../math/SafeMath.sol";
 import "./IERC20.sol";
 
 /**

@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.7.6;
+
+import "./IERC1155Receiver.sol";
+import "../../introspection/ERC165.sol";
+
+/**
+ * @dev _Available since v3.1._
+ */
+abstract contract ERC1155Receiver is ERC165, IERC1155Receiver {
+    constructor() {
+        _registerInterface(type(IERC1155Receiver).interfaceId);
+    }
+}
