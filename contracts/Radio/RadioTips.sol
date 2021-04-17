@@ -17,7 +17,7 @@ contract RadioTips is Ownable {
         mapping (address => uint256) tipsJar;
     }
 
-    // it will be used for any inner currencies (ETH-xDAI)
+    // it will be used for any blockchain native currency (ETH-xDAI)
     address public constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     mapping (address => uint256) public radioJars;
     mapping (uint256 => Artist) public artists;
@@ -37,11 +37,6 @@ contract RadioTips is Ownable {
         uint256 amount
     );
 
-    function getArtistTip(uint256 _artistId, address _token) external view returns(uint256) {
-        Artist storage artist = artists[_artistId];
-        return artist.tipsJar[_token];
-    }
-    
     /**
      * @dev Function for tipping defiville radio service
      * @param _token token used for tipping the radio
@@ -130,7 +125,7 @@ contract RadioTips is Ownable {
 
     /**
      * @dev Internal function for checking the correctness related 
-     * to the native currency sent to tip (ETH/xDAI)
+     * to the native blockchain currency amount sent as tip (ETH/xDAI)
      */
     function _checkTipInEth() internal {
         require(tipInETH == msg.value, 'Wrong amount');
@@ -284,5 +279,15 @@ contract RadioTips is Ownable {
         artist.recipient = _recipient;
         artistRecipients[_artistId] = _recipient;
         emit SetArtistRecipient(_artistId, _recipient);
+    }
+
+    /**
+     * @dev Function to retrieve artists tip amount
+     * @param _artistId artist id
+     * @param _token token to check
+     */
+    function getArtistTips(uint256 _artistId, address _token) external view returns(uint256) {
+        Artist storage artist = artists[_artistId];
+        return artist.tipsJar[_token];
     }
 }
