@@ -13,6 +13,7 @@ describe('Deploy and test RadioTips', () => {
     const islaToMint = BigNumber.from(100).pow(BigNumber.from(18))
     const islaToApprove = BigNumber.from(100).pow(BigNumber.from(18))
     const islaToTip = BigNumber.from(10).pow(BigNumber.from(18))
+    const ETH = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
     let radioTips: Contract
     let isla: Contract
@@ -55,19 +56,33 @@ describe('Deploy and test RadioTips', () => {
         await expect(radioTips.addArtists([noName])).to.be.revertedWith('Empty Name')
     })
 
-    it('Allow to tip existent artist by anyone but redeem it only by artist', async()=> {
+    it('Allow to tip existent artist with ERC20 by anyone but redeem it only by artist', async()=> {
         await radioTips.connect(alice).tipArtist(0, isla.address, islaToTip)
-        await radioTips.connect(rehab   ).redeemArtistTips(0, [isla.address], [islaToTip])
+        await radioTips.connect(rehab).redeemArtistTips(0, [isla.address], [islaToTip])
+    })
+
+    it('Allow to tip existent artist with ETH by anyone but redeem it only by artist', async()=> {
+        await radioTips.connect(alice).tipArtist(0, ETH, islaToTip, {value:islaToTip})
+        await radioTips.connect(rehab).redeemArtistTips(0, [ETH],    [islaToTip])
+    })
+
+    it('Allow to tip existent artists with ETH twice', async()=> {
+        await radioTips.connect(alice).tipArtists([0,0], [ETH, ETH], [islaToTip, islaToTip], {value:islaToTip.mul(2)})
+        await radioTips.connect(rehab).redeemArtistTips(0, [ETH], [islaToTip])
+        const ETHtip = await radioTips.getArtistTip(0, ETH)
+        expect(ETHtip).to.be.equal(islaToTip)
+
     })
 
     it('Allow to tips radio by anyone but reedem these only by owner', async()=> {
         await radioTips.connect(alice).tipRadio(isla.address, islaToTip)
+        await radioTips.connect(alice).tipRadio(ETH, islaToTip, {value:islaToTip})
         await expect(radioTips.connect(alice).redeemRadioTips(
             [isla.address], 
             [islaToTip],
             deployer.address
         )).to.be.revertedWith('Ownable: caller is not the owner')
-        await radioTips.redeemRadioTips([isla.address], [islaToTip], deployer.address)
+        await radioTips.redeemRadioTips([isla.address, ETH], [islaToTip, islaToTip], deployer.address)
     })
 
     it('Allow to initialize recipient only by owner, once', async()=> {

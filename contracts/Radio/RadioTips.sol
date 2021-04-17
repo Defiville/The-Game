@@ -14,13 +14,16 @@ contract RadioTips is Ownable {
     struct Artist {
         string name;
         address recipient;
-        mapping (address => uint256) tipJars;
+        mapping (address => uint256) tipsJar;
     }
 
+    // it will be used for any inner currencies (ETH-xDAI)
+    address public constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     mapping (address => uint256) public radioJars;
     mapping (uint256 => Artist) public artists;
     mapping (uint256 => address) public artistRecipients;
     uint256 public nextArtistId;
+    uint256 tipInETH;
     
     event AddArtist(string name, address recipient, uint256 artistId);
     event RedeemRadioTips(address recipient, address[] tokens, uint256[] amounts);
@@ -33,14 +36,20 @@ contract RadioTips is Ownable {
         uint256 indexed artistId, 
         uint256 amount
     );
+
+    function getArtistTip(uint256 _artistId, address _token) external view returns(uint256) {
+        Artist storage artist = artists[_artistId];
+        return artist.tipsJar[_token];
+    }
     
     /**
      * @dev Function for tipping defiville radio service
      * @param _token token used for tipping the radio
      * @param _amount amount to tip
      */
-    function tipRadio(address _token, uint256 _amount) external {
+    function tipRadio(address _token, uint256 _amount) external payable {
         _tipRadio(_token, _amount);
+        _checkTipInEth();
     }
     
     /**
@@ -48,11 +57,12 @@ contract RadioTips is Ownable {
      * @param _tokens tokens used for tipping the radio
      * @param _amounts amounts to tip
      */
-    function tipsRadio(address[] memory _tokens, uint256[] memory _amounts) external {
+    function tipsRadio(address[] memory _tokens, uint256[] memory _amounts) external payable {
         require(_tokens.length == _amounts.length, 'Different length');
         for (uint256 i = 0; i < _tokens.length; i++) {
             _tipRadio(_tokens[i], _amounts[i]);
         }
+        _checkTipInEth();
     }
 
     /**
@@ -61,7 +71,11 @@ contract RadioTips is Ownable {
      * @param _amount amount to tip
      */
     function _tipRadio(address _token, uint256 _amount) internal {
-        _receiveToken(_token, _amount);
+        if (_token == ETH) {
+            tipInETH = tipInETH.add(_amount);
+        } else {
+            _receiveToken(_token, _amount);
+        }
         radioJars[_token] = radioJars[_token].add(_amount);
         emit TipRadio(msg.sender, _token, _amount); 
     }
@@ -72,8 +86,9 @@ contract RadioTips is Ownable {
      * @param _token token used for tipping the artist
      * @param _amount amount to tip 
      */
-    function tipArtist(uint256 _artistId, address _token, uint256 _amount) external {
+    function tipArtist(uint256 _artistId, address _token, uint256 _amount) external payable {
         _tipArtist(_artistId, _token, _amount);
+        _checkTipInEth();
     }
 
     /**
@@ -87,11 +102,12 @@ contract RadioTips is Ownable {
         uint256[] memory _artistIds,
         address[] memory _tokens,
         uint256[] memory _amounts
-    ) external {
+    ) external payable {
         require(_artistIds.length == _amounts.length, 'Different length');
         for (uint256 i = 0; i < _artistIds.length; i++) {
             _tipArtist(_artistIds[i], _tokens[i], _amounts[i]);
         }
+        _checkTipInEth();
     }
 
     /**
@@ -103,10 +119,22 @@ contract RadioTips is Ownable {
     function _tipArtist(uint256 _artistId, address _token, uint256 _amount) internal {
         require(_artistId < nextArtistId, 'Artist id not created yet');
         Artist storage artist = artists[_artistId];
-        //require(keccak256(abi.encodePacked(artist.name)) != keccak256(abi.encodePacked('')), 'No Name');
-        _receiveToken(_token, _amount);
-        artist.tipJars[_token] = artist.tipJars[_token].add(_amount);
+        if (_token == ETH) {
+            tipInETH = tipInETH.add(_amount);
+        } else {
+            _receiveToken(_token, _amount);
+        }
+        artist.tipsJar[_token] = artist.tipsJar[_token].add(_amount);
         emit TipArtist(msg.sender, _token, _artistId, _amount); 
+    }
+
+    /**
+     * @dev Internal function for checking the correctness related 
+     * to the native currency sent to tip (ETH/xDAI)
+     */
+    function _checkTipInEth() internal {
+        require(tipInETH == msg.value, 'Wrong amount');
+        tipInETH = 0;
     }
     
     /**
@@ -175,9 +203,13 @@ contract RadioTips is Ownable {
         require(msg.sender == artist.recipient, 'Only recipient');
         require(_tokens.length == _amounts.length, 'Different length');
         for (uint256 i = 0; i < _tokens.length; i++) {
-          require(artist.tipJars[_tokens[i]] >= _amounts[i], 'Amount exceed tips');    
-          _sendToken(_tokens[i], artist.recipient, _amounts[i]);
-          artist.tipJars[_tokens[i]] = artist.tipJars[_tokens[i]].sub(_amounts[i]);  
+            require(artist.tipsJar[_tokens[i]] >= _amounts[i], 'Amount exceed tips');
+            if (_tokens[i] == ETH) {
+                payable(artist.recipient).transfer(_amounts[i]);
+            } else {
+                _sendToken(_tokens[i], artist.recipient, _amounts[i]);
+            }        
+            artist.tipsJar[_tokens[i]] = artist.tipsJar[_tokens[i]].sub(_amounts[i]);  
         }
         emit RedeemArtistTips(_artistId, _tokens, _amounts);
     }
@@ -196,7 +228,11 @@ contract RadioTips is Ownable {
         require(_tokens.length == _amounts.length, 'Different length');
         for (uint256 i = 0; i < _tokens.length; i++) {
             require(radioJars[_tokens[i]] >= _amounts[i], 'Amount exceed tips');
-           _sendToken(_tokens[i], _recipient, _amounts[i]);
+            if (_tokens[i] == ETH) {
+                payable(_recipient).transfer(_amounts[i]);
+            } else {
+                _sendToken(_tokens[i], _recipient, _amounts[i]);
+            }
            radioJars[_tokens[i]] = radioJars[_tokens[i]].sub(_amounts[i]);
         }
         emit RedeemRadioTips(_recipient, _tokens, _amounts);
