@@ -1,0 +1,75 @@
+Arguments: 
+  /usr/local/Cellar/node/15.2.0/bin/node /usr/local/Cellar/yarn/1.22.10/libexec/bin/yarn.js
+
+PATH: 
+  /Users/andrea/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Apple/bin:/Users/andrea/Downloads/apache-maven-3.6.2/bin:/Applications/VMware Fusion.app/Contents/Public:/Users/andrea/.local/bin:/Users/andrea/Library/Python/3.9/bin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  15.2.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/andrea/Desktop/repo/The-Game/package.json: Unexpected token } in JSON at position 695
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.22.10/libexec/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.22.10/libexec/lib/cli.js:310:30)
+      at /usr/local/Cellar/yarn/1.22.10/libexec/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "starter",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+      "@testing-library/jest-dom": "^5.11.10",
+      "@testing-library/react": "^11.2.6",
+      "@testing-library/user-event": "^12.8.3",
+      "@types/jest": "^26.0.22",
+      "@types/node": "^12.20.7",
+      "@types/react": "^17.0.3",
+      "@types/react-dom": "^17.0.3",
+      "bootstrap": "^4.6.0",
+      "react": "^17.0.2",
+      "react-bootstrap": "^1.5.2",
+      "react-dom": "^17.0.2",
+      "react-scripts": "4.0.3",
+      "typescript": "^4.2.4",
+      "web-vitals": "^1.1.1"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+      "extends": [
+        "react-app",
+        "react-app/jest"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

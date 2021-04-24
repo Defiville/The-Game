@@ -1,0 +1,361 @@
+.overlay, .elements {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  position: absolute;
+  width: 768px;
+  height: 640px;
+}
+
+span {
+  background-size: cover;
+}
+
+.a1 {
+  background-image: url('../images/map/A1.png');
+}
+.a2 {
+  background-image: url('../images/map/A2.png');
+}
+.a3 {
+  background-image: url('../images/map/A3.png');
+}
+.a4 {
+  background-image: url('../images/map/A4.png');
+}
+.a5 {
+  background-image: url('../images/map/A5.png');
+}
+.a6 {
+  background-image: url('../images/map/A6.png');
+}
+.a7 {
+  background-image: url('../images/map/A7.png');
+}
+.a8 {
+  background-image: url('../images/map/A8.png');
+}
+.a9 {
+  background-image: url('../images/map/A9.png');
+}
+.a10 {
+  background-image: url('../images/map/A10.png');
+}
+.a11 {
+  background-image: url('../images/map/A11.png');
+}
+
+/* ================================================= */
+
+.b1 {
+  background-image: url('../images/map/B1.png');
+}
+.b2 {
+  background-image: url('../images/map/B2.png');
+}
+.b3 {
+  background-image: url('../images/map/B3.png');
+}
+.b4 {
+  background-image: url('../images/map/B4.png');
+}
+.b5 {
+  background-image: url('../images/map/B5.png');
+}
+.b6 {
+  background-image: url('../images/map/B6.png');
+}
+.b7 {
+  background-image: url('../images/map/B7.png');
+}
+.b8 {
+  background-image: url('../images/map/B8.png');
+}
+.b9 {
+  background-image: url('../images/map/B9.png');
+}
+.b10 {
+  background-image: url('../images/map/B10.png');
+}
+.b11 {
+  background-image: url('../images/map/B11.png');
+}
+
+/* ================================================= */
+
+.c1 {
+  background-image: url('../images/map/C1.png');
+}
+.c2 {
+  background-image: url('../images/map/C2.png');
+}
+.c3 {
+  background-image: url('../images/map/C3.png');
+}
+.c4 {
+  background-image: url('../images/map/C4.png');
+}
+.c5 {
+  background-image: url('../images/map/C5.png');
+}
+.c6 {
+  background-image: url('../images/map/C6.png');
+}
+.c7 {
+  background-image: url('../images/map/C7.png');
+}
+.c8 {
+  background-image: url('../images/map/C8.png');
+}
+.c9 {
+  background-image: url('../images/map/C9.png');
+}
+.c10 {
+  background-image: url('../images/map/C10.png');
+}
+.c11 {
+  background-image: url('../images/map/C11.png');
+}
+
+/* ================================================= */
+
+.d1 {
+  background-image: url('../images/map/D1.png');
+}
+.d2 {
+  background-image: url('../images/map/D2.png');
+}
+.d3 {
+  background-image: url('../images/map/D3.png');
+}
+.d4 {
+  background-image: url('../images/map/D4.png');
+}
+.d5 {
+  background-image: url('../images/map/D5.png');
+}
+.d6 {
+  background-image: url('../images/map/D6.png');
+}
+.d7 {
+  background-image: url('../images/map/D7.png');
+}
+.d8 {
+  background-image: url('../images/map/D8.png');
+}
+.d9 {
+  background-image: url('../images/map/D9.png');
+}
+.d10 {
+  background-image: url('../images/map/D10.png');
+}
+.d11 {
+  background-image: url('../images/map/D11.png');
+}
+.d12 {
+  background-image: url('../images/map/D12.png');
+}
+
+/* ================================================= */
+
+.e1 {
+  background-image: url('../images/map/E1.png');
+}
+.e2 {
+  background-image: url('../images/map/E2.png');
+}
+.e3 {
+  background-image: url('../images/map/E3.png');
+}
+.e4 {
+  background-image: url('../images/map/E4.png');
+}
+.e5 {
+  background-image: url('../images/map/E5.png');
+}
+.e6 {
+  background-image: url('../images/map/E6.png');
+}
+.e7 {
+  background-image: url('../images/map/E7.png');
+}
+.e8 {
+  background-image: url('../images/map/E8.png');
+}
+.e9 {
+  background-image: url('../images/map/E9.png');
+}
+.e10 {
+  background-image: url('../images/map/E10.png');
+}
+.e11 {
+  background-image: url('../images/map/E11.png');
+}
+
+/* ================================================= */
+
+.f1 {
+  background-image: url('../images/map/F1.png');
+}
+.f2 {
+  background-image: url('../images/map/F2.png');
+}
+.f3 {
+  background-image: url('../images/map/F3.png');
+}
+.f4 {
+  background-image: url('../images/map/F4.png');
+}
+.f5 {
+  background-image: url('../images/map/F5.png');
+}
+.f6 {
+  background-image: url('../images/map/F6.png');
+}
+.f7 {
+  background-image: url('../images/map/F7.png');
+}
+.f8 {
+  background-image: url('../images/map/F8.png');
+}
+.f9 {
+  background-image: url('../images/map/F9.png');
+}
+.f10 {
+  background-image: url('../images/map/F10.png');
+}
+.f11 {
+  background-image: url('../images/map/F11.png');
+}
+
+/* ================================================= */
+
+.g1 {
+  background-image: url('../images/map/G1.png');
+}
+.g2 {
+  background-image: url('../images/map/G2.png');
+}
+.g3 {
+  background-image: url('../images/map/G3.png');
+}
+.g4 {
+  background-image: url('../images/map/G4.png');
+}
+.g5 {
+  background-image: url('../images/map/G5.png');
+}
+.g6 {
+  background-image: url('../images/map/G6.png');
+}
+.g7 {
+  background-image: url('../images/map/G7.png');
+}
+.g8 {
+  background-image: url('../images/map/G8.png');
+}
+.g9 {
+  background-image: url('../images/map/G9.png');
+}
+.g10 {
+  background-image: url('../images/map/G10.png');
+}
+.g11 {
+  background-image: url('../images/map/G11.png');
+}
+.g12 {
+  background-image: url('../images/map/G12.png');
+}
+
+/* ================================================= */
+
+.H1 {
+  background-image: url('../images/map/H1.png');
+}
+.H2 {
+  background-image: url('../images/map/H2.png');
+}
+.H3 {
+  background-image: url('../images/map/H3.png');
+}
+.H4 {
+  background-image: url('../images/map/H4.png');
+}
+.H5 {
+  background-image: url('../images/map/H5.png');
+}
+.H7 {
+  background-image: url('../images/map/H7.png');
+}
+.H9 {
+  background-image: url('../images/map/H9.png');
+}
+.H10 {
+  background-image: url('../images/map/H10.png');
+}
+.H11 {
+  background-image: url('../images/map/H11.png');
+}
+.H12 {
+  background-image: url('../images/map/H12.png');
+}
+
+/* ================================================= */
+
+.i1 {
+  background-image: url('../images/map/I1.png');
+}
+.i2 {
+  background-image: url('../images/map/I2.png');
+}
+.i3 {
+  background-image: url('../images/map/I3.png');
+}
+.i4 {
+  background-image: url('../images/map/I4.png');
+}
+.i5 {
+  background-image: url('../images/map/I5.png');
+}
+.i7 {
+  background-image: url('../images/map/I7.png');
+}
+.i8 {
+  background-image: url('../images/map/I8.png');
+}
+.i9 {
+  background-image: url('../images/map/I9.png');
+}
+.i10 {
+  background-image: url('../images/map/I10.png');
+}
+.i11 {
+  background-image: url('../images/map/I11.png');
+}
+.i12 {
+  background-image: url('../images/map/I12.png');
+}
+
+/* ================================================= */
+
+.l2 {
+  background-image: url('../images/map/L2.png');
+}
+.l3 {
+  background-image: url('../images/map/L3.png');
+}
+.l4 {
+  background-image: url('../images/map/L4.png');
+}
+.l9 {
+  background-image: url('../images/map/L9.png');
+}
+.l10 {
+  background-image: url('../images/map/L10.png');
+}
+.l11 {
+  background-image: url('../images/map/L11.png');
+}
+.l12 {
+  background-image: url('../images/map/L12.png');
+}

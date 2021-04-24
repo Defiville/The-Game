@@ -1,0 +1,27 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Press Start 2P', cursive;
+  background-color: #00A8BE !important;
+  background-image: url('img/PNG/waves.png');
+  background-repeat: repeat;
+  background-position: center;
+  background-size: 64px 64px;
+  animation: waves 3s linear infinite;
+  cursor: url('img/pointer.png'), auto;
+}
+@keyframes waves {
+        0%   { background-position: 0 0 ; }
+        50% { background-position: calc(1vw - 4px) 0 ; }
+        100%   { background-position: 0 0 ; }
+    }
+
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  margin: 0;
+}
+
+p {
+  font-size: 12px;
+}
